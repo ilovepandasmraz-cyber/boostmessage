@@ -111,15 +111,23 @@ client.once(Events.ClientReady, async () => {
 // Handle test command
 client.on(Events.InteractionCreate, async interaction => {
   if (!interaction.isChatInputCommand()) return;
+
   if (interaction.commandName === 'testboost') {
+    const allowedRoleId = 'YOUR_ROLE_ID_HERE'; // Replace with the actual role ID
+
+    const member = await interaction.guild.members.fetch(interaction.user.id);
+    if (!member.roles.cache.has(allowedRoleId)) {
+      return interaction.reply({
+        content: "🚫 You don't have permission to use this command.",
+        ephemeral: true
+      });
+    }
+
     const targetUser = interaction.options.getUser('user');
-    const member = await interaction.guild.members.fetch(targetUser.id);
+    const targetMember = await interaction.guild.members.fetch(targetUser.id);
     const channel = interaction.channel;
 
-    await handleBoost(member, channel);
-    await interaction.reply({ content: `Simulated boost for <@${member.id}>`, ephemeral: true });
+    await handleBoost(targetMember, channel);
+    await interaction.reply({ content: `✅ Simulated boost for <@${targetMember.id}>`, ephemeral: true });
   }
-});
-
-// Login
-client.login(process.env.TOKEN);
+}); // <-- ✅ This line was missing
