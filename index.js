@@ -76,7 +76,7 @@ async function handleBoost(newMember, channel) {
 // Boost detection
 client.on('guildMemberUpdate', async (oldMember, newMember) => {
   if (!oldMember.premiumSince && newMember.premiumSince) {
-    const boostChannelId = 'YOUR_CHANNEL_ID_HERE'; // Replace with your channel ID
+    const boostChannelId = '1392253947451805766'; // Replace with your channel ID
     const channel = newMember.guild.channels.cache.get(boostChannelId);
     if (!channel) return;
 
@@ -113,21 +113,22 @@ client.on(Events.InteractionCreate, async interaction => {
   if (!interaction.isChatInputCommand()) return;
 
   if (interaction.commandName === 'testboost') {
-    const allowedRoleId = 'YOUR_ROLE_ID_HERE'; // Replace with the actual role ID
+    const requiredRoleId = '1386674622275125421'; // Replace with your required role ID
 
-    const member = await interaction.guild.members.fetch(interaction.user.id);
-    if (!member.roles.cache.has(allowedRoleId)) {
-      return interaction.reply({
-        content: "🚫 You don't have permission to use this command.",
-        ephemeral: true
-      });
+    if (!interaction.member.roles.cache.has(requiredRoleId)) {
+      return interaction.reply({ content: "❌ You don't have permission to use this command.", ephemeral: true });
     }
 
     const targetUser = interaction.options.getUser('user');
-    const targetMember = await interaction.guild.members.fetch(targetUser.id);
+    const member = await interaction.guild.members.fetch(targetUser.id);
     const channel = interaction.channel;
 
-    await handleBoost(targetMember, channel);
-    await interaction.reply({ content: `✅ Simulated boost for <@${targetMember.id}>`, ephemeral: true });
+    await handleBoost(member, channel);
+    await interaction.reply({ content: `Simulated boost for <@${member.id}>`, ephemeral: true });
   }
-}); // <-- ✅ This line was missing
+});
+
+
+
+// Login
+client.login(process.env.TOKEN);
