@@ -1,5 +1,8 @@
 const { Client, GatewayIntentBits, EmbedBuilder, Partials, Events, REST, Routes, SlashCommandBuilder } = require('discord.js');
 require('dotenv').config();
+const express = require('express');
+const app = express();
+const port = process.env.PORT || 3000;
 
 // Create the bot client
 const client = new Client({
